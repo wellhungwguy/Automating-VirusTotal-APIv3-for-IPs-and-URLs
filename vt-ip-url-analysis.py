@@ -1,6 +1,5 @@
 import argparse
 import time
-from pathlib import Path
 import requests
 import re
 import pandas as pd
@@ -149,33 +148,7 @@ def urlReport(arg):
         "first_submission_date",
         "total_votes",
         "type",
-        "id",
-        "links",
-        "trackers",
-        "last_http_response_cookies",
-        "html_meta"
-        ]
-
-    # iterate through the filteredResponse dictionary using the keys_to_remove array and pop to remove additional keys listed in the array
-    for key in keys_to_remove:
-      filteredResponse.pop(key, None)
-
-    # create a dataframe with the remaining keys stored in the filteredResponse dictionary
-    # orient="index" is necessary in order to list the index of attribute keys as rows and not as columns
-    dataframe = pd.DataFrame.from_dict(filteredResponse, orient="index")
-    
-    # rename the column header to the submitted url
-    dataframe.columns = [target_url]
-
-    # grab "malicious" key data from last_analysis_stats to create the first part of the community_score_info
-    community_score = (decodedResponse["data"]["attributes"]["last_analysis_stats"]["malicious"])
-
-    # grab the sum of last_analysis_stats to create the total number of security vendors that reviewed the URL for the second half of the community_score_info
-    total_vt_reviewers = (decodedResponse["data"]["attributes"]["last_analysis_stats"]["harmless"])+(decodedResponse["data"]["attributes"]["last_analysis_stats"]["malicious"])+(decodedResponse["data"]["attributes"]["last_analysis_stats"]["suspicious"])+(decodedResponse["data"]["attributes"]["last_analysis_stats"]["undetected"])+(decodedResponse["data"]["attributes"]["last_analysis_stats"]["timeout"])
-
-    # create a custom community score using community_score and the total_vt_reviewers values
-    community_score_info = str(community_score)+ ("/") + str(total_vt_reviewers) + ("  :  security vendors flagged this as malicious")
-
+       
     # amend dataframe with extra community score row
     dataframe.loc['virustotal report',:] = vt_urlReportLink
 
